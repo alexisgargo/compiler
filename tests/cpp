@@ -1,0 +1,104 @@
+Tokens:
+<16, -1>
+<16, -1>
+<0, 0>
+<0, 1>
+<4, -1>
+<5, -1>
+<16, -1>
+<6, -1>
+<16, -1>
+<15, -1>
+<15, -1>
+<0, 2>
+<0, 3>
+<15, -1>
+<14, -1>
+<12, -1>
+<16, -1>
+<15, -1>
+<15, -1>
+<0, 4>
+<11, -1>
+<11, -1>
+<0, 5>
+<0, 6>
+<15, -1>
+<12, -1>
+<16, -1>
+<16, -1>
+<15, -1>
+<15, -1>
+<0, 7>
+<4, -1>
+<0, 8>
+<15, -1>
+<5, -1>
+<16, -1>
+<15, -1>
+<15, -1>
+<15, -1>
+<15, -1>
+<0, 9>
+<11, -1>
+<11, -1>
+<0, 10>
+<15, -1>
+<15, -1>
+<15, -1>
+<0, 11>
+<11, -1>
+<11, -1>
+<0, 12>
+<12, -1>
+<16, -1>
+<16, -1>
+<15, -1>
+<15, -1>
+<0, 13>
+<12, -1>
+<16, -1>
+<7, -1>
+
+Symbols:
+0: int
+1: main
+2: double
+3: pi
+4: std
+5: string
+6: message
+7: if
+8: pi
+9: std
+10: cout
+11: std
+12: endl
+13: return
+
+Errors:
+Lexeme #include <iostream>
+ not recognized
+Lexeme #include <string>
+ not recognized
+Lexeme // testing comments
+ not recognized
+Lexeme /* more comments */ not recognized
+Lexeme = not recognized
+Lexeme 3 not recognized
+Lexeme 1 not recognized
+Lexeme 4 not recognized
+Lexeme 1 not recognized
+Lexeme 5 not recognized
+Lexeme 9 not recognized
+Lexeme = not recognized
+Lexeme "Testing lexical analyzer" not recognized
+Lexeme > not recognized
+Lexeme 4 not recognized
+Lexeme 0 not recognized
+Lexeme < not recognized
+Lexeme < not recognized
+Lexeme "Count is greater than 40" not recognized
+Lexeme < not recognized
+Lexeme < not recognized
+Lexeme 0 not recognized

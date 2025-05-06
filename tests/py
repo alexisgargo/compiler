@@ -1,0 +1,91 @@
+Tokens:
+<1, -1>
+<0, 0>
+<11, -1>
+<16, -1>
+<15, -1>
+<15, -1>
+<2, -1>
+<0, 1>
+<4, -1>
+<0, 2>
+<13, -1>
+<15, -1>
+<0, 3>
+<13, -1>
+<15, -1>
+<0, 4>
+<5, -1>
+<11, -1>
+<16, -1>
+<15, -1>
+<15, -1>
+<15, -1>
+<15, -1>
+<0, 5>
+<0, 6>
+<15, -1>
+<0, 7>
+<16, -1>
+<16, -1>
+<0, 8>
+<0, 9>
+<15, -1>
+<11, -1>
+<16, -1>
+<15, -1>
+<15, -1>
+<0, 10>
+<15, -1>
+<0, 11>
+<4, -1>
+<5, -1>
+<16, -1>
+<15, -1>
+<15, -1>
+<0, 12>
+<13, -1>
+<15, -1>
+<0, 13>
+<15, -1>
+<13, -1>
+<15, -1>
+<16, -1>
+<15, -1>
+<15, -1>
+<0, 14>
+<4, -1>
+<0, 15>
+<5, -1>
+
+Symbols:
+0: Calculator
+1: add
+2: self
+3: a
+4: b
+5: return
+6: a
+7: b
+8: if
+9: __name__
+10: calc
+11: Calculator
+12: a
+13: b
+14: print
+15: f
+
+Errors:
+Lexeme + not recognized
+Lexeme #python comment
+ not recognized
+Lexeme = not recognized
+Lexeme = not recognized
+Lexeme "__main__" not recognized
+Lexeme = not recognized
+Lexeme = not recognized
+Lexeme 1 not recognized
+Lexeme 0 not recognized
+Lexeme 3 not recognized
+Lexeme "Add: {a} + {b} = {calc.add(a, b)}" not recognized

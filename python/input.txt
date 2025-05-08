@@ -1,0 +1,7 @@
+class Persona extends Humano {
+    public void saludar() {
+        if (edad > 18) {
+            return;
+        }
+    }
+}

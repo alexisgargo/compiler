@@ -3,8 +3,9 @@
 #include "tables.c"
 
 #define BUFFER_SIZE 128
-#define START_FINAL_STATES 11
-#define STATE_TOKENID_DIFFERENCE 8
+#define START_FINAL_STATES 12
+#define FAIL_STATE 19
+#define STATE_TOKENID_DIFFERENCE 9
 
 /*
   maps the ASCII values of the DFA alphabet to their respective index
@@ -17,7 +18,7 @@ void mapSymbols(int charToIndex[128])
 {
   // any characters out of the alphabet
   for (int i = 0; i < 128; i++)
-    charToIndex[i] = 25;
+    charToIndex[i] = 16;
 
   // A-Z
   for (int i = 'A'; i < 'Z'; i++)
@@ -37,20 +38,11 @@ void mapSymbols(int charToIndex[128])
   charToIndex[')'] = 7;
   charToIndex['{'] = 8;
   charToIndex['}'] = 9;
-  charToIndex['['] = 10;
-  charToIndex[']'] = 11;
-  charToIndex['@'] = 12;
-  charToIndex[':'] = 13;
-  charToIndex[';'] = 14;
-  charToIndex[','] = 15;
-  charToIndex['.'] = 16;
-  charToIndex['-'] = 17;
-  charToIndex['>'] = 18;
 
   // ignoring strings
-  charToIndex['"'] = 19;
-  charToIndex['\''] = 20;
-  charToIndex['`'] = 21;
+  charToIndex['"'] = 10;
+  charToIndex['\''] = 11;
+  charToIndex['`'] = 12;
 
   // space delimiters
   charToIndex[' '] = 0;
@@ -58,9 +50,9 @@ void mapSymbols(int charToIndex[128])
   charToIndex['\t'] = 2;
 
   // comments
-  charToIndex['/'] = 22;
-  charToIndex['*'] = 23;
-  charToIndex['#'] = 24;
+  charToIndex['/'] = 13;
+  charToIndex['*'] = 14;
+  charToIndex['#'] = 15;
 
   /*
     special case for EOF, as some languages like python
@@ -89,7 +81,10 @@ void mapSymbols(int charToIndex[128])
 */
 int advance(int state, char ch)
 {
-  return ch != EOF && (state != 11 || (state == 11 && ch == ' '));
+  return ch != EOF && (state != 17) && (state != 18) &&
+         (state != START_FINAL_STATES ||
+          (state == START_FINAL_STATES && ch == ' ')) &&
+         !(state == 19 && ch == '\n');
 }
 
 /*
@@ -97,13 +92,13 @@ int advance(int state, char ch)
 
   @state: current state
 
-  states 3-16 are accepted
+  states 12-17 are accepted
 
   Return: 1 if it is accepted, 0 if not
 */
 int accept(int state)
 {
-  return state > 10 && state < 27;
+  return state >= START_FINAL_STATES && state < FAIL_STATE;
 }
 
 /*
@@ -121,7 +116,10 @@ int accept(int state)
 */
 int shouldBuffer(int state, char ch, int len)
 {
-  return len < BUFFER_SIZE - 1 && (state != 11) || ((state == 7 || state == 10) && !(ch == '\n'));
+  return len < BUFFER_SIZE - 1 && ch != '\n' &&
+             (state != 10 && state != 11) &&
+             (state != START_FINAL_STATES) ||
+         ((state == 5 || state == 6 || state == 9));
 }
 
 /*
@@ -138,7 +136,7 @@ int getWordId(char *buffer)
     id = 1;
   else if (!strcmp(buffer, "def"))
     id = 2;
-  else if (!strcmp(buffer, "function"))
+  else if (!strcmp(buffer, "main"))
     id = 3;
   return id;
 }
@@ -154,7 +152,7 @@ int getWordId(char *buffer)
 int getTokenId(int state, char *buffer)
 {
   int id;
-  if (state == 11)
+  if (state == START_FINAL_STATES)
     id = getWordId(buffer);
   else
     id = state - STATE_TOKENID_DIFFERENCE;
@@ -198,18 +196,20 @@ void saveToFile(char *filename, tokenTable *tokens, charTable *identifiers, char
 */
 int main(int argc, char **argv)
 {
-  static const int transitionTable[11][26] = {
-      {23, 24, 25, 1, 27, 1, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 2, 27, 3, 4, 5, 6, 27, 10, 27},
-      {11, 11, 11, 1, 1, 1, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 27, 11, 11, 11, 11, 11, 11, 1},
-      {27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 26, 27, 27, 27, 27, 27, 27, 27},
-      {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 27, 3, 3, 3, 3, 3, 3},
-      {4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 27, 4, 4, 4, 4, 4},
-      {5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 27, 5, 5, 5, 5},
-      {27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 7, 8, 27, 27},
-      {7, 27, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7},
-      {8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 9, 8, 8},
-      {8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 27, 8, 8, 8},
-      {10, 27, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10}};
+  static const int transitionTable[12][17] = {
+      {19, 10, 19, 1, 19, 1, 13, 14, 15, 16, 2, 3, 4, 5, 19, 9, 19},
+      {12, 12, 12, 1, 1, 1, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12},
+      {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 19, 2, 2, 2, 2, 2, 2},
+      {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 19, 3, 3, 3, 3, 3},
+      {4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 19, 4, 4, 4, 4},
+      {19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 6, 7, 19, 19},
+      {6, 19, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6},
+      {7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8, 7, 7},
+      {7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 19, 7, 7, 7},
+      {9, 19, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9},
+      {11, 10, 11, 18, 19, 18, 13, 14, 15, 16, 2, 3, 4, 5, 19, 9, 19},
+      {11, 10, 11, 17, 17, 17, 17, 17, 17, 17, 17, 17, 17, 5, 17, 9, 17},
+  };
 
   int charToIndex[128];
   mapSymbols(charToIndex);

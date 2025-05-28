@@ -15,7 +15,7 @@ PYSTATEMENT'' = id, ), indent
 PYSTATEMENT' = (, {, ε
 PYSTATEMENT = id
 
-PYSTATEMENTS' = id, noindent, ε, indent
+PYSTATEMENTS' = id, noindent, indent, ε
 PYSTATEMENTS = id, noindent
 
 INDENTEDBLOCK'' = indent, ε
@@ -26,16 +26,18 @@ PYMIXEDCOMPLEMENT = noindent, def, class, ε
 PYMIXED = noindent, def, class
 
 MIXEDCOMPLEMENT = indent, noindent, id, class, main, ε
-MIXEDN = indent, noindent, id, class, main
+MIXEDN = indent, noindent, id, class
 
-MIXED = indent, noindent, id, class, main, def
+MIXED = indent, noindent, id, class, def
 
 PYFUNC' = id, noindent, ε
 PYFUNC = def, noindent
 
 FUNC' = indent, noindent, ε
-FUNC = indent, noindent, id, main
+FUNC = indent, noindent, id
 
+PP'' -> indent, noindent, id, ε
+PP' -> main, indent, noindent, ε
 PP = def, indent, noindent, id, main
 
 PYCLASS'' = id, noindent, ε
@@ -53,5 +55,5 @@ OOP = indent, noindent, class, id
 
 PARADIGM = indent, noindent, id, class, main, def
 
-S' = indent, noindent, ε
+S' = indent, noindent, id, ε
 S = indent, noindent, id, class, main, def

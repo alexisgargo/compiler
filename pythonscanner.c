@@ -40,6 +40,7 @@ void mapSymbols(int charToIndex[128])
   charToIndex['l'] = 5;
   charToIndex['a'] = 6;
   charToIndex['s'] = 7;
+  charToIndex['_'] = 8;
 
   /*
     special case for EOF, as some languages like python
@@ -68,11 +69,6 @@ void mapSymbols(int charToIndex[128])
 */
 int advance(int state, char ch)
 {
-  // return ch != EOF && (state != 17) && (state != 18) &&
-  //        (state != START_FINAL_STATES ||
-  //         (state == START_FINAL_STATES && ch == ' ')) &&
-  //        !(state == 19 && ch == '\n');
-  // return (state != 10)
   return state < START_FINAL_STATES;
 }
 
@@ -208,21 +204,15 @@ int main(int argc, char **argv)
   while (ch != EOF)
   {
     state = 0;
-    // bufferLen = 0;
-
-    // states >= 11 are final
     while (state < START_FINAL_STATES)
     {
       state = transitionTable[state][charVal];
-      // if (shouldBuffer(state, ch, bufferLen))
-      //   buffer[bufferLen++] = ch;
       if (advance(state, ch))
       {
         ch = fgetc(fileptr);
         charVal = charToIndex[ch];
       }
     }
-    // adding an end of string to the buffer
 
     if (accept(state))
     {

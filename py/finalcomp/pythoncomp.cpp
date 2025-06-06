@@ -155,7 +155,10 @@ std::vector<int> scanner(const char *filename)
       if (advance(state, ch))
       {
         ch = fgetc(fileptr);
-        charVal = charToIndex[ch];
+        if (ch == -1)
+          charVal = 10;
+        else
+          charVal = charToIndex[ch];
       }
     }
 
@@ -276,7 +279,7 @@ public:
 
 int main()
 {
-  std::vector<int> tokens = scanner("val1.py");
+  std::vector<int> tokens = scanner("3.py");
   tokens.push_back(-1);
 
   // 1: def, 2: class, 3: self, -1: $

@@ -461,6 +461,7 @@ public:
   {
     this->tokens = tokens;
   }
+
   std::string parse()
   {
     try
@@ -469,6 +470,7 @@ public:
     }
     catch (std::runtime_error e)
     {
+      // prints where the error happened
       std::cout << e.what();
     }
     if (isOOP && isPP)
@@ -491,10 +493,6 @@ int main()
   std::cout << "tokens: ";
   for (int token : tokens)
     std::cout << token << " ";
-
-  // std::vector<int> tokens;
-
-  // tokens.push_back(-1);
 
   Parser parser = Parser(tokens);
   std::string paradigm = parser.parse();
